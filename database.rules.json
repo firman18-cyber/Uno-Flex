@@ -1,1 +1,34 @@
 
+{
+  "rules": {
+    "rooms": {
+      "$roomId": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+
+        "players": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.hasChildren(['name', 'flex', 'online', 'avatar'])",
+
+            "name": {
+              ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 18"
+            },
+
+            "flex": {
+              ".validate": "newData.val() === 'green' || newData.val() === 'red'"
+            },
+
+            "online": {
+              ".validate": "newData.isBoolean()"
+            },
+
+            "avatar": {
+              ".validate": "newData.isString()"
+            }
+          }
+        }
+      }
+    }
+  }
+}
