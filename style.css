@@ -6,11 +6,16 @@
     --bg-dark: #070f14;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+/* KUNCI LAYAR SECARA ABSOLUT (ANTI TERPOTONG / SCROLL) */
 body, html { 
     background-color: var(--bg-dark); 
     background-image: radial-gradient(circle at 10% 10%, rgba(227, 24, 40, 0.15) 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(0, 118, 192, 0.15) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(56, 200, 35, 0.1) 0%, transparent 60%);
-    color: #fff; font-family: 'Nunito', sans-serif; width: 100vw; height: 100dvh; overflow: hidden;
+    color: #fff; font-family: 'Nunito', sans-serif; 
+    position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 100%; overflow: hidden;
 }
+
 .luckiest { font-family: 'Luckiest Guy', cursive; letter-spacing: 1px; }
 .hidden { display: none !important; }
 
@@ -32,7 +37,7 @@ body, html {
 .bg-green { background: var(--uno-green); } .bg-blue { background: var(--uno-blue); }
 
 /* GAME ARENA */
-#game-section { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 10px; position: relative; }
+#game-section { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 10px 10px 70px 10px; position: relative; }
 .top-bar { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .tb-logo { font-size: 1.4rem; line-height: 0.9; transform: rotate(-5deg); text-shadow: 2px 2px 0 #000; }
 .tb-center { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.6); border: 2px solid #333; border-radius: 25px; padding: 4px 12px; }
@@ -45,11 +50,11 @@ body, html {
 .btn-exit-top { background: var(--uno-red); border: 2px solid #000; border-radius: 8px; width: 34px; height: 34px; display: flex; justify-content: center; align-items: center; box-shadow: 0 3px 0 #000; cursor: pointer; transition: transform 0.1s; }
 .btn-exit-top:active { transform: translateY(2px); box-shadow: 0 1px 0 #000; }
 
-.rules-box { background: #0a0a0a; border: 3px solid var(--uno-yellow); border-radius: 12px; padding: 6px 12px; width: 100%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-bottom: 10px; z-index: 10; }
+.rules-box { background: #0a0a0a; border: 3px solid var(--uno-yellow); border-radius: 12px; padding: 6px 12px; width: 100%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); margin-bottom: 5px; z-index: 10; }
 .rules-title { color: var(--uno-yellow); font-size: 1rem; text-align: center; margin-bottom: 2px; text-shadow: 1px 1px 0 #000; }
 .rule-item { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 2px; font-size: 0.78rem; font-weight: 700; line-height: 1.2;}
 
-.arena-container { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; flex-grow: 1; margin-bottom: 45px; }
+.arena-container { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; flex-grow: 1; margin-bottom: 0; }
 .side-col { display: flex; flex-direction: column; gap: 10px; width: 75px; align-items: center; justify-content: center;}
 .opp-box { display: flex; flex-direction: column; align-items: center; }
 .opp-avatar { width: 50px; height: 50px; border-radius: 50%; border: 3px solid #333; background: #222; position: relative; }
@@ -61,51 +66,76 @@ body, html {
 .opp-minicard { margin-top: 3px; width: 22px; height: 32px; border-radius: 4px; border: 2px solid #fff; display: flex; justify-content: center; align-items: center; }
 .mini-g { background: var(--uno-green); } .mini-r { background: var(--uno-red); }
 
-/* DESIGN KARTU RESMI UNO FLEX (LEBIH BESAR) */
-.center-col { display: flex; flex-direction: column; align-items: center; z-index: 10; }
-.card-container { perspective: 1000px; width: 165px; height: 250px; cursor: pointer; transition: transform 0.1s; }
+/* ==============================================================
+   DESIGN KARTU RESMI UNO FLEX 
+   (Ukuran lebih besar & Desain Persis Fisik)
+============================================================== */
+.center-col { display: flex; flex-direction: column; align-items: center; z-index: 10; justify-content: center; }
+
+.card-container { 
+    perspective: 1000px; 
+    height: 40vh; /* DIPERBESAR */
+    min-height: 220px; 
+    max-height: 320px;
+    width: calc(min(40vh, 320px) * 0.66); 
+    min-width: 145px;
+    cursor: pointer; transition: transform 0.1s; 
+}
 .card-container:active { transform: scale(0.96); }
 .power-card { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
 .power-card.flipped { transform: rotateY(180deg); }
 
+/* Hilangkan Border Putih */
 .card-face { 
     position: absolute; width: 100%; height: 100%; backface-visibility: hidden; 
-    border-radius: 18px; display: flex; align-items: center; justify-content: center; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    border-radius: 16px; display: flex; align-items: center; justify-content: center; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    border: none; 
 }
 
-/* Sisi Depan (Hijau Aktif) */
+/* Sisi Depan (Hijau dengan Pattern Centang) */
 .card-front { 
-    background-color: #8cc63f;
-    border: 6px solid #a2d854;
-    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 20 l6 6 l14 -14' stroke='rgba(110, 168, 30, 0.35)' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-color: #83d127;
+    background-image: url("data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 20 l6 6 l14 -14' stroke='%2369b512' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* Sisi Belakang (Merah Nonaktif) */
+/* Sisi Belakang (Merah dengan Pattern Silang) */
 .card-back { 
-    background-color: #ed1c24;
-    border: 6px solid #f2484f;
+    background-color: #ef1a25; 
     transform: rotateY(180deg);
-    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 12 l16 16 M28 12 l-16 16' stroke='rgba(180, 15, 20, 0.35)' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg width='35' height='35' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 12 l16 16 M28 12 l-16 16' stroke='%23cc111a' stroke-width='7' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
-/* Lingkaran Simbol Tengah Ala UNO Flex */
+/* Desain Cincin Tengah + Drop Shadow Hitam Persis Referensi */
 .c-icon { 
-    background: #ffffff; 
-    width: 95px; height: 95px; 
+    background: transparent; 
+    width: 65%; aspect-ratio: 1/1; 
     border-radius: 50%; 
+    border: 12px solid #ffffff; /* Cincin Putih */
     display: flex; align-items: center; justify-content: center; 
-    border: 7px solid #1a1a1a;
-    box-shadow: 4px 6px 0px rgba(0,0,0,0.25);
+    
+    /* Keajaiban CSS: Membuat bayangan hitam tajam pada cincin putih & icon sekaligus! */
+    filter: drop-shadow(4px 4px 0px #1a1a1a);
 }
-.c-icon svg { width: 55px; height: 55px; filter: drop-shadow(2px 3px 0px rgba(0,0,0,0.2)); } 
-.card-front .c-icon svg { color: #72b01d; } 
-.card-back .c-icon svg { color: #d91018; }
 
-.card-label { margin-top: 10px; font-size: 1.1rem; color: #000; background: var(--uno-yellow); padding: 3px 16px; border-radius: 5px; transform: skewX(-10deg); box-shadow: 2px 2px 0 #000; }
+/* Ikon SVG di dalam Cincin */
+.c-icon svg { 
+    width: 55%; height: 55%; 
+    color: #ffffff !important; /* Warna ikon putih murni */
+    stroke-width: 8px !important; /* Dibuat lebih tebal dari aslinya */
+}
 
-/* BOTTOM BAR */
-.bottom-bar { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); border: 2px solid var(--uno-blue); border-radius: 15px; padding: 6px 14px; font-size: 0.95rem; color: #fff; box-shadow: 0 5px 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: space-between; gap: 15px; width: 95%; max-width: 400px; z-index: 20; }
+/* Label Status di Bawah Kartu */
+.card-label { 
+    margin-top: 15px; font-size: 1.2rem; color: #000; 
+    background: var(--uno-yellow); padding: 4px 18px; 
+    border-radius: 5px; transform: skewX(-10deg); 
+    box-shadow: 3px 3px 0 #000; 
+}
+
+
+/* BOTTOM BAR POSISI MUTLAK */
+.bottom-bar { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.85); border: 2px solid var(--uno-blue); border-radius: 15px; padding: 6px 14px; font-size: 0.95rem; color: #fff; box-shadow: 0 5px 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: space-between; gap: 15px; width: 95%; max-width: 400px; z-index: 20; }
 .bb-name { color: var(--uno-yellow); display: flex; align-items: center; gap: 5px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 400px; }
