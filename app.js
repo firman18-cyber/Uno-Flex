@@ -1,8 +1,10 @@
-// app.js
 import { db } from './firebase-config.js';
 import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 
-// Cek Anti-Refresh: Jika session masih ada, langsung tendang ke room.html
+// ==========================================
+const MAX_PLAYERS = 8; // BISA DIUBAH MENJADI 12, 16, DLL
+// ==========================================
+
 const savedSession = sessionStorage.getItem('unoFlexSession');
 if (savedSession) {
     const sessionData = JSON.parse(savedSession);
@@ -49,12 +51,10 @@ document.getElementById('btn-join-room').addEventListener('click', async () => {
         const snap = await get(ref(db, `rooms/${code}`));
         if (snap.exists()) {
             const players = snap.val().players || {};
-            if (Object.keys(players).length >= 8) return showToast("Room Penuh (Maks 8)");
+            if (Object.keys(players).length >= MAX_PLAYERS) return showToast(`Room Penuh (Maks ${MAX_PLAYERS})`);
             
             sessionStorage.setItem('unoFlexSession', JSON.stringify({ id: myPlayerId, name: myName, room: code }));
             window.location.href = `room.html?id=${code}`;
-        } else {
-            showToast("Room Tidak Ditemukan");
-        }
+        } else { showToast("Room Tidak Ditemukan"); }
     } catch(e) { showToast("Error Jaringan"); }
 });
