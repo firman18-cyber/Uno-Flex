@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UNO FLEX — Room</title>
+<link rel="stylesheet" href="room.css">
+</head>
+<body>
+<main class="room">
+<header class="top">
+  <div class="online"><i></i> ONLINE</div>
+  <div class="room-code">ROOM <strong id="roomCode">------</strong></div>
+  <div class="count"><b id="count">0</b>/<b id="max">8</b></div>
+</header>
+
+<section class="rules">
+<h2>ATURAN POWER CARD</h2>
+<p><b class="g">HIJAU ✓</b> — BOLEH PAKAI KEMAMPUAN FLEX</p>
+<p><b class="r">MERAH ×</b> — FLEX TERKUNCI</p>
+<p>JIKA SEMUA KARTU PEMAIN MERAH, SEMUA OTOMATIS KEMBALI HIJAU</p>
+</section>
+
+<section class="players" id="players"></section>
+
+<section class="host-panel" id="hostPanel" hidden>
+  <span>MAKS PEMAIN</span>
+  <input id="maxPlayers" type="number" min="2" max="32" value="8">
+  <button id="saveMax">SIMPAN</button>
+</section>
+
+<button id="leave" class="leave">↪ KELUAR</button>
+<p id="status"></p>
+</main>
+<script type="module" src="room.js"></script>
+</body>
+</html>
