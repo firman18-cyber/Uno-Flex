@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UNO Flex — Cyber Arena</title>
+    
+    <!-- Import Font dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Teko:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --green-glow: #39ff14;
+            --red-glow: #ff073a;
+            --bg-dark: #050a0f;
+            --card-w: 160px;
+            --card-h: 240px;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; padding: 0;
+            user-select: none;
+        }
+        
+        body, html { 
+            background-color: var(--bg-dark); 
+            /* Background grunge gelap */
+            background-image: radial-gradient(circle at center, #112230 0%, #050a0f 100%);
+            background-attachment: fixed;
+            color: #fff; 
+            font-family: 'Teko', sans-serif;
+            width: 100vw;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .hidden { display: none !important; }
+
+        /* ================= SETUP SECTION ================= */
+        .setup-container {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px; background: rgba(0,0,0,0.8);
+        }
+        .setup-panel { 
+            background: rgba(10, 20, 30, 0.9); padding: 30px; 
+            border: 2px solid var(--green-glow);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.3), inset 0 0 15px rgba(57, 255, 20, 0.2);
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+            width: 100%; max-width: 350px; text-align: center; 
+        }
+        .setup-title { font-family: 'Permanent Marker', cursive; color: var(--green-glow); font-size: 2.5rem; margin-bottom: 20px; text-shadow: 2px 2px 0 #000; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 1.2rem; letter-spacing: 1px; color: #00f3ff; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #00f3ff; background: #000; color: #fff; font-size: 1.2rem; font-family: 'Teko', sans-serif; outline: none; }
+        button { background: transparent; color: var(--green-glow); border: 2px solid var(--green-glow); padding: 10px; font-size: 1.5rem; cursor: pointer; width: 100%; margin-top: 10px; font-family: 'Teko', sans-serif; letter-spacing: 1px; transition: all 0.2s; }
+        button:active { background: var(--green-glow); color: #000; }
+        .btn-blue { border-color: #00f3ff; color: #00f3ff; }
+        .btn-blue:active { background: #00f3ff; color: #000; }
+        .divider { margin: 15px 0; color: #fff; font-size: 1.2rem; }
+
+        /* ================= GAME SECTION ================= */
+        #game-section {
+            display: flex; flex-direction: column; align-items: center;
+            width: 100%; min-height: 100vh; padding-bottom: 90px; /* Ruang untuk panel bawah */
+        }
+
+        /* Top Bar */
+        .top-bar {
+            width: 100%; max-width: 600px;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            padding: 15px 20px 10px 20px;
+        }
+        .top-left { display: flex; flex-direction: column; }
+        .room-text { font-family: 'Permanent Marker', cursive; font-size: 1.8rem; color: #fff; transform: rotate(-3deg); text-shadow: 2px 2px 0px #000; margin-bottom: -5px; }
+        .room-id-sub { font-size: 1rem; color: #00f3ff; letter-spacing: 1px; display: flex; align-items: center; gap: 5px; transform: rotate(-3deg); }
+        
+        .top-right { display: flex; align-items: center; gap: 8px; font-family: 'Permanent Marker', cursive; font-size: 1.5rem; color: var(--green-glow); transform: rotate(-3deg); text-shadow: 1px 1px 0px #000; }
+        .conn-dot { width: 15px; height: 15px; border-radius: 50%; background: var(--green-glow); box-shadow: 0 0 10px var(--green-glow); }
+        .conn-red { background: var(--red-glow); box-shadow: 0 0 10px var(--red-glow); color: var(--red-glow); }
+
+        /* Aturan Rules Box */
+        .rules-cyber {
+            width: 90%; max-width: 450px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid var(--green-glow);
+            box-shadow: inset 0 0 15px rgba(57, 255, 20, 0.1);
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            padding: 15px; text-align: center; margin-bottom: 20px;
+            transform: skewX(-5deg);
+        }
+        .rules-cyber h3 { font-family: 'Permanent Marker', cursive; font-size: 1.3rem; margin-bottom: 5px; letter-spacing: 1px; }
+        .r-green { color: var(--green-glow); font-size: 1.1rem; letter-spacing: 1px; }
+        .r-red { color: var(--red-glow); font-size: 1.1rem; letter-spacing: 1px; }
+        .r-white { color: #fff; font-size: 1rem; letter-spacing: 1px; margin-top: 5px; border-top: 1px dashed #555; padding-top: 5px; }
+
+        /* ARENA GRID (Kiri - Tengah - Kanan) */
+        .arena-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            width: 100%; max-width: 600px;
+            gap: 10px; align-items: center; justify-items: center;
+            padding: 0 10px;
+        }
+        .opp-col { display: flex; flex-direction: column; gap: 20px; width: 100%; align-items: center; }
+        .center-col { z-index: 10; margin: 0 10px; }
+
+        /* KARTU UTAMA (Tengah) */
+        .card-container { perspective: 1000px; width: var(--card-w); height: var(--card-h); cursor: pointer; }
+        .power-card { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+        .power-card.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; border: 6px solid white; display: flex; align-items: center; justify-content: center; }
+        
+        .card-front { background-color: var(--green-glow); box-shadow: 0 0 30px rgba(57, 255, 20, 0.6); background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 20 l5 5 l15 -15' stroke='rgba(0,0,0,0.1)' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+        .card-back { background-color: var(--red-glow); box-shadow: 0 0 30px rgba(255, 7, 58, 0.6); background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 12 l16 16 M28 12 l-16 16' stroke='rgba(0,0,0,0.1)' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); transform: rotateY(180deg); }
+        
+        .card-icon-wrapper { background: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 6px solid #222; }
+        .card-front .card-icon-wrapper svg { color: var(--green-glow); width: 50px; height: 50px; }
+        .card-back .card-icon-wrapper svg { color: var(--red-glow); width: 50px; height: 50px; }
+        
+        /* LAWAN (Kiri & Kanan) */
+        .opp-card { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .opp-avatar-box {
+            width: 80px; height: 80px; position: relative;
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            background-color: #222;
+        }
+        .opp-avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Dinamis Glow Warna Lawan */
+        .glow-blue { border: 2px solid #00f3ff; box-shadow: 0 0 15px #00f3ff; }
+        .glow-red { border: 2px solid #ff073a; box-shadow: 0 0 15px #ff073a; }
+        .glow-purple { border: 2px solid #bc13fe; box-shadow: 0 0 15px #bc13fe; }
+        .glow-gold { border: 2px solid #ffea00; box-shadow: 0 0 15px #ffea00; }
+        
+        .host-crown { position: absolute; top: -12px; left: -10px; font-size: 1.5rem; transform: rotate(-20deg); text-shadow: 0 0 5px #ffea00; z-index: 5; }
+
+        .opp-nameplate {
+            background: #000; color: #fff; font-size: 1.2rem;
+            padding: 0 15px; margin-top: -10px; z-index: 2;
+            transform: skewX(-10deg); border: 1px solid #fff;
+            white-space: nowrap; max-width: 110px; overflow: hidden; text-overflow: ellipsis;
+        }
+        .opp-id { font-size: 0.9rem; color: #aaa; margin-bottom: 5px; letter-spacing: 1px; }
+
+        /* Kartu Mini Lawan */
+        .mini-card {
+            width: 35px; height: 50px; border-radius: 4px; border: 2px solid #fff;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .mini-green { background-color: var(--green-glow); box-shadow: 0 0 10px var(--green-glow); }
+        .mini-red { background-color: var(--red-glow); box-shadow: 0 0 10px var(--red-glow); }
+        .mini-card svg { width: 20px; height: 20px; color: #fff; }
+
+        /* PANEL BAWAH (Pemain Sendiri) */
+        .bottom-cyber-panel {
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 500px;
+            background: rgba(0,0,0,0.85); border: 2px solid #00f3ff;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 20px; z-index: 100;
+        }
+        .b-left { display: flex; align-items: center; gap: 15px; }
+        .b-icon { width: 35px; height: 35px; background: #fff; border-radius: 50%; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); }
+        .b-texts { display: flex; flex-direction: column; }
+        .b-label { font-size: 0.9rem; color: #aaa; letter-spacing: 1px; line-height: 1; }
+        .b-name { font-size: 1.8rem; color: #fff; letter-spacing: 2px; line-height: 1.1; }
+
+        /* Toast Popup */
+        #toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 400px; }
+        .toast { background: rgba(0, 0, 0, 0.9); color: white; padding: 12px 15px; border-radius: 8px; font-size: 1.2rem; animation: slideDown 0.3s ease-out; text-align: center; border: 2px solid var(--green-glow); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <!-- SETUP AWAL -->
+    <div id="setup-section" class="setup-container">
+        <div class="setup-panel">
+            <h1 class="setup-title">UNO FLEX<br>CYBER ARENA</h1>
+            <div class="form-group">
+                <label>NAMA PEMAIN</label>
+                <input type="text" id="player-name" placeholder="MARSHALENA..." autocomplete="off">
+            </div>
+            <button id="btn-create-room">BUAT ROOM</button>
+            <div class="divider">ATAU</div>
+            <div class="form-group">
+                <label>KODE ROOM</label>
+                <input type="text" id="room-code" placeholder="7528D" style="text-transform: uppercase;">
+            </div>
+            <button id="btn-join-room" class="btn-blue">GABUNG ROOM</button>
+        </div>
+    </div>
+
+    <!-- GAME UTAMA -->
+    <div id="game-section" class="hidden">
+        
+        <!-- Bar Atas -->
+        <div class="top-bar">
+            <div class="top-left">
+                <div class="room-text">ROOM: <span id="display-room-code">----</span></div>
+                <div class="room-id-sub">👥 ID ROOM : <span id="display-room-sub">----</span></div>
+            </div>
+            <div class="top-right">
+                <div id="conn-indicator" class="conn-dot"></div>
+                <span id="conn-text">ONLINE</span>
+            </div>
+        </div>
+
+        <!-- Aturan Teks Cyber -->
+        <div class="rules-cyber">
+            <h3>ATURAN POWER CARD:</h3>
+            <div class="r-green">AKTIF: BOLEH PAKAI KEMAMPUAN FLEX</div>
+            <div class="r-red">NONAKTIF: FLEX TERKUNCI SAMPAI DIKEMBALIKAN</div>
+            <div class="r-white">JIKA SEMUA MERAH, SISTEM MERESET KE HIJAU</div>
+        </div>
+
+        <!-- ARENA PEMAIN -->
+        <div class="arena-grid" id="arena-grid">
+            <!-- Render JS -->
+        </div>
+
+        <!-- PANEL BAWAH PEMAIN SENDIRI -->
+        <div class="bottom-cyber-panel">
+            <div class="b-left">
+                <div class="b-icon">
+                    <svg viewBox="0 0 24 24" fill="#000" style="width:100%; height:100%; padding:5px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <div class="b-texts">
+                    <span class="b-label">NAMA PEMAIN</span>
+                    <span class="b-name" id="display-my-name">NAMA</span>
+                </div>
+            </div>
+            <div class="top-right" style="font-size:1.2rem; transform:none; text-shadow:none;">
+                <div class="conn-dot"></div> ONLINE
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update, onValue, onDisconnect, remove } 
+            from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+
+        // GANTI DENGAN KONFIGURASI FIREBASE ANDA
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsUmrDn3pI8J4q1XnTU4KcnFeUgHgByZY",
+            authDomain: "uno-flex-f36e8.firebaseapp.com",
+            databaseURL: "https://uno-flex-f36e8-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "uno-flex-f36e8",
+            storageBucket: "uno-flex-f36e8.firebasestorage.app",
+            messagingSenderId: "878978021695",
+            appId: "1:878978021695:web:3995ae12c7575016497b8a"
+        };
+
+        let app, db;
+        try { app = initializeApp(firebaseConfig); db = getDatabase(app); } 
+        catch (error) { showToast("Gagal memuat Firebase!"); }
+
+        async function cleanupOldRooms() {
+            if (!db) return;
+            try {
+                const snap = await get(ref(db, 'rooms'));
+                if (snap.exists()) {
+                    const now = Date.now(), rooms = snap.val(), batas = 24 * 60 * 60 * 1000;
+                    for (const id in rooms) {
+                        if (!rooms[id].createdAt || (now - rooms[id].createdAt > batas)) remove(ref(db, `rooms/${id}`));
+                    }
+                }
+            } catch(e) {}
+        }
+        setTimeout(cleanupOldRooms, 3000);
+
+        let myPlayerId = 'player_' + Date.now() + Math.random().toString(36).substr(2, 5);
+        let myName = '';
+        let currentRoom = null;
+        let isHost = false;
+        let myIsActive = true; 
+        
+        const setupSection = document.getElementById('setup-section');
+        const gameSection = document.getElementById('game-section');
+        const arenaGrid = document.getElementById('arena-grid');
+        const connIndicator = document.getElementById('conn-indicator');
+        const connText = document.getElementById('conn-text');
+
+        if(db) {
+            onValue(ref(db, ".info/connected"), (snap) => {
+                if (snap.val() === true) {
+                    connIndicator.className = "conn-dot"; connText.textContent = "ONLINE"; connText.style.color = "var(--green-glow)";
+                } else {
+                    connIndicator.className = "conn-dot conn-red"; connText.textContent = "OFFLINE"; connText.style.color = "var(--red-glow)";
+                }
+            });
+        }
+
+        document.getElementById('btn-create-room').addEventListener('click', async () => {
+            myName = document.getElementById('player-name').value.trim().toUpperCase();
+            if (!myName) return showToast("MASUKKAN NAMA!");
+            const newCode = generateRoomCode();
+            currentRoom = newCode; isHost = true;
+            try {
+                await set(ref(db, `rooms/${newCode}`), { hostId: myPlayerId, createdAt: Date.now() });
+                await joinRoomLogic(newCode, ref(db, `rooms/${newCode}/players/${myPlayerId}`));
+            } catch(e) { showToast("GAGAL MEMBUAT"); }
+        });
+
+        document.getElementById('btn-join-room').addEventListener('click', async () => {
+            myName = document.getElementById('player-name').value.trim().toUpperCase();
+            let code = document.getElementById('room-code').value.trim().toUpperCase();
+            if (!myName || !code) return showToast("LENGKAPI DATA!");
+            try {
+                const snap = await get(ref(db, `rooms/${code}`));
+                if (snap.exists()) {
+                    const players = snap.val().players || {};
+                    if (Object.keys(players).length >= 8 && !players[myPlayerId]) return showToast("ROOM PENUH");
+                    currentRoom = code;
+                    await joinRoomLogic(code, ref(db, `rooms/${code}/players/${myPlayerId}`));
+                } else showToast("ROOM TIDAK DITEMUKAN");
+            } catch(e) { showToast("ERROR SYSTEM"); }
+        });
+
+        async function joinRoomLogic(roomCode, myPlayerRef) {
+            await set(myPlayerRef, { id: myPlayerId, name: myName, isActive: true });
+            onDisconnect(myPlayerRef).remove();
+
+            setupSection.classList.add('hidden');
+            gameSection.classList.remove('hidden');
+            document.getElementById('display-room-code').textContent = roomCode;
+            document.getElementById('display-room-sub').textContent = roomCode;
+            document.getElementById('display-my-name').textContent = myName;
+
+            onValue(ref(db, `rooms/${roomCode}`), (snapshot) => {
+                if (!snapshot.exists()) { showToast("ROOM DITUTUP"); setTimeout(() => window.location.reload(), 2000); return; }
+                const data = snapshot.val(), players = data.players || {};
+                if (!players[data.hostId] && Object.keys(players).length > 0) {
+                    const newHostId = Object.keys(players)[0];
+                    if (myPlayerId === newHostId) { isHost = true; update(ref(db, `rooms/${roomCode}`), { hostId: newHostId }); }
+                } else isHost = (myPlayerId === data.hostId);
+
+                renderPlayers(players, data.hostId);
+                checkAllRedRule(players);
+            });
+        }
+
+        // Generate Frame Color by ID
+        const colors = ['glow-blue', 'glow-red', 'glow-purple', 'glow-gold'];
+        function getColorClass(id) {
+            let sum = 0; for(let i=0; i<id.length; i++) sum += id.charCodeAt(i);
+            return colors[sum % colors.length];
+        }
+
+        // Random Anime Avatar URL from DiceBear API
+        function getAvatarUrl(name) {
+            return `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffdfbf,ffd5dc`;
+        }
+
+        function renderPlayers(players, hostId) {
+            let leftHTML = '', rightHTML = '', mainCardHTML = '';
+            let oppIndex = 0;
+
+            Object.values(players).forEach(p => {
+                if (p.id === myPlayerId) {
+                    myIsActive = p.isActive;
+                    const flipped = p.isActive ? '' : 'flipped';
+                    mainCardHTML = `
+                        <div class="center-col">
+                            <div class="card-container" id="my-card-trigger">
+                                <div class="power-card ${flipped}">
+                                    <div class="card-face card-front">
+                                        <div class="card-icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+                                    </div>
+                                    <div class="card-face card-back">
+                                        <div class="card-icon-wrapper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    const isHostIcon = p.id === hostId ? '<div class="host-crown">👑</div>' : '';
+                    const miniClass = p.isActive ? 'mini-green' : 'mini-red';
+                    const svgIcon = p.isActive 
+                        ? '<polyline points="20 6 9 17 4 12" fill="none" stroke="currentColor" stroke-width="4"></polyline>'
+                        : '<line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="4"></line><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="4"></line>';
+                    
+                    const oppHtml = `
+                        <div class="opp-card">
+                            <div class="opp-avatar-box ${getColorClass(p.id)}">
+                                ${isHostIcon}
+                                <img src="${getAvatarUrl(p.name)}" alt="Avatar">
+                            </div>
+                            <div class="opp-nameplate" style="border-color: ${getColorClass(p.id).replace('glow-', '')}">${escapeHTML(p.name)}</div>
+                            <div class="opp-id">ID: ${p.id.substr(p.id.length - 5).toUpperCase()}</div>
+                            <div class="mini-card ${miniClass}"><svg viewBox="0 0 24 24">${svgIcon}</svg></div>
+                        </div>
+                    `;
+
+                    // Distribusi Kiri dan Kanan
+                    if (oppIndex % 2 === 0) leftHTML += oppHtml;
+                    else rightHTML += oppHtml;
+                    oppIndex++;
+                }
+            });
+
+            // Susun Grid: Kiri | Tengah | Kanan
+            arenaGrid.innerHTML = `
+                <div class="opp-col">${leftHTML}</div>
+                ${mainCardHTML}
+                <div class="opp-col">${rightHTML}</div>
+            `;
+
+            // Pasang event listener ke kartu utama baru
+            const trigger = document.getElementById('my-card-trigger');
+            if (trigger) {
+                trigger.addEventListener('click', () => {
+                    update(ref(db, `rooms/${currentRoom}/players/${myPlayerId}`), { isActive: !myIsActive });
+                });
+            }
+        }
+
+        let isResetting = false;
+        function checkAllRedRule(players) {
+            const arr = Object.values(players);
+            if (arr.length === 0) return;
+            if (arr.every(p => p.isActive === false) && !isResetting) {
+                isResetting = true;
+                showToast("SEMUA MERAH! RESET KE HIJAU...", 2500);
+                if (isHost) {
+                    setTimeout(() => {
+                        const updates = {};
+                        arr.forEach(p => updates[`rooms/${currentRoom}/players/${p.id}/isActive`] = true);
+                        update(ref(db), updates).then(() => { isResetting = false; }).catch(() => { isResetting = false; });
+                    }, 1200); 
+                } else setTimeout(() => { isResetting = false; }, 1800);
+            }
+        }
+
+        function generateRoomCode() {
+            let res = '', chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            for (let i = 0; i < 5; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            return res;
+        }
+
+        function showToast(msg, dur = 2000) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast'; toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity='0'; setTimeout(()=>toast.remove(), 400); }, dur);
+        }
+
+        function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)); }
+    </script>
+</body>
+</html>
