@@ -1,1 +1,65 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UNO FLEX Room</title><link rel="stylesheet" href="style.css"></head><body><main class="game"><header><div class="logo mini">UNO<small>FLEX!</small></div><div class="roombar"><span class="online">● ONLINE</span><span class="divider"></span><span>ID ROOM <b id="roomId">----</b></span><button id="copy">⧉</button></div><div class="count">👥 <b id="count">0/8</b></div></header><section class="rules"><h2>ATURAN PERMAINAN</h2><p><i class="green">✓</i> <b>AKTIF:</b> BOLEH PAKAI KEMAMPUAN FLEX</p><p><i class="red">×</i> <b>NONAKTIF:</b> FLEX TERKUNCI SAMPAI DIKEMBALIKAN</p><p><i class="green">✓</i> JIKA SEMUA KARTU PEMAIN MERAH, SEMUA OTOMATIS KEMBALI HIJAU</p></section><section id="players" class="players"></section><section class="hero"><h2>KARTU AKTIF</h2><div class="scene"><div id="heroCard" class="bigcard green"><div class="pattern"></div><div class="circle"><span>✓</span></div></div></div><p class="hint">TAP KARTU UNTUK MEMBALIK</p></section><div id="toast" class="toast">✨ SEMUA KARTU MERAH!<br><small>SEMUA DIKEMBALIKAN KE HIJAU</small></div><button id="leave" class="leave">🚪 KELUAR</button></main><script type="module" src="room.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UNO Flex — Game Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-section">
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <div class="tb-logo luckiest"><span style="color:var(--uno-yellow)">UNO</span><br>FLEX!</div>
+            <div class="tb-center">
+                <div id="conn-indicator" class="luckiest online-pill"><span class="dot"></span> ONLINE</div>
+                <div class="tb-divider"></div>
+                <div class="room-id-box" id="btn-copy-room">
+                    ID ROOM
+                    <strong><span id="display-room-code">----</span> 📋</strong>
+                </div>
+            </div>
+            <!-- TOMBOL KELUAR -->
+            <div id="btn-leave-room" class="btn-exit-top">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="#fff"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+            </div>
+        </div>
+
+        <!-- ATURAN -->
+        <div class="rules-box">
+            <div class="rules-title luckiest">ATURAN PERMAINAN</div>
+            <div class="rule-item"><span class="icon">✅</span><span><b style="color:var(--uno-green)">AKTIF:</b> Boleh pakai kemampuan Flex</span></div>
+            <div class="rule-item"><span class="icon">❌</span><span><b style="color:var(--uno-red)">NONAKTIF:</b> Flex terkunci</span></div>
+            <div class="rule-item" style="border-top: 1px dashed #555; padding-top: 5px; margin-top: 5px;"><span class="icon">🔄</span><span>Sistem reset otomatis jika semua merah</span></div>
+        </div>
+
+        <!-- ARENA KARTU -->
+        <div class="arena-container">
+            <div class="side-col" id="col-left"></div>
+            <div class="center-col" id="main-card-area">
+                <div class="card-container" id="my-card-trigger">
+                    <div class="power-card" id="my-power-card">
+                        <div class="card-face card-front"><div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div>
+                        <div class="card-face card-back"><div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></div>
+                    </div>
+                </div>
+                <div id="my-card-status" class="card-label luckiest">KARTU AKTIF</div>
+            </div>
+            <div class="side-col" id="col-right"></div>
+        </div>
+
+        <!-- TOTAL PEMAIN -->
+        <div class="bottom-bar luckiest">
+            👥 PEMAIN: <span id="player-count-display">1</span> / 8
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    
+    <!-- Script Logic Game -->
+    <script type="module" src="room.js"></script>
+
+</body>
+</html>
