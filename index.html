@@ -1,1 +1,44 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UNO FLEX!</title><link rel="stylesheet" href="style.css"></head><body><main class="login"><div class="logo">UNO<small>FLEX!</small></div><section class="box"><h1>MASUK ROOM</h1><label>NAMA KAMU</label><input id="name" maxlength="18" placeholder="Nama pemain"><label>KODE ROOM</label><input id="room" maxlength="8" placeholder="Kode room"><div class="buttons"><button id="create">BUAT ROOM</button><button id="join">JOIN ROOM</button></div><p id="msg"></p></section></main><script type="module" src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>UNO Flex — Mobile Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="setup-container">
+        <div class="logo-big luckiest">
+            <span class="uno">UNO</span><br>
+            <span style="color:#fff">FLEX!</span>
+        </div>
+
+        <div class="setup-panel">
+            <div class="input-group">
+                <div class="input-label label-green luckiest">👤 NAMA KAMU</div>
+                <span class="input-icon">👤</span>
+                <input type="text" id="player-name" class="input-box" placeholder="Masukkan nama..." autocomplete="off">
+            </div>
+
+            <div class="input-group" style="margin-bottom:15px;">
+                <div class="input-label label-yellow luckiest"># KODE ROOM</div>
+                <span class="input-icon" style="top:13px; font-size:1.3rem;">#</span>
+                <input type="text" id="room-code" class="input-box" placeholder="Masukkan kode..." style="text-transform: uppercase;">
+            </div>
+
+            <div class="btn-row">
+                <button id="btn-create-room" class="btn-game bg-green luckiest">➕ BUAT</button>
+                <button id="btn-join-room" class="btn-game bg-blue luckiest">👥 GABUNG</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    
+    <!-- Script Logic Halaman Awal -->
+    <script type="module" src="app.js"></script>
+
+</body>
+</html>
