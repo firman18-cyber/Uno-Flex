@@ -1,10 +1,10 @@
 // Firebase Console > Project settings > Your apps > Web app
 export const firebaseConfig = {
-  apiKey: "GANTI_API_KEY",
-  authDomain: "GANTI_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://GANTI_PROJECT_ID-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "GANTI_PROJECT_ID",
-  storageBucket: "GANTI_PROJECT_ID.firebasestorage.app",
-  messagingSenderId: "GANTI_MESSAGING_SENDER_ID",
-  appId: "GANTI_APP_ID"
+  apiKey: "AIzaSyAsUmrDn3pI8J4q1XnTU4KcnFeUgHgByZY",
+  authDomain: "uno-flex-f36e8.firebaseapp.com",
+  databaseURL: "https://uno-flex-f36e8-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "uno-flex-f36e8",
+  storageBucket: "uno-flex-f36e8.firebasestorage.app",
+  messagingSenderId: "878978021695",
+  appId: "1:878978021695:web:3995ae12c7575016497b8a"
 };
