@@ -1,10 +1,6 @@
 import { db } from './firebase-config.js';
 import { ref, set, get } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 
-// ==========================================
-const MAX_PLAYERS = 8; // BISA DIUBAH MENJADI 12, 16, DLL
-// ==========================================
-
 const savedSession = sessionStorage.getItem('unoFlexSession');
 if (savedSession) {
     const sessionData = JSON.parse(savedSession);
@@ -33,7 +29,8 @@ document.getElementById('btn-create-room').addEventListener('click', async () =>
     let newCode = generateRoomCode();
 
     try {
-        await set(ref(db, `rooms/${newCode}`), { hostId: myPlayerId, createdAt: Date.now() });
+        // Default saat room pertama kali dibuat adalah 8
+        await set(ref(db, `rooms/${newCode}`), { hostId: myPlayerId, createdAt: Date.now(), maxPlayers: 8 });
         sessionStorage.setItem('unoFlexSession', JSON.stringify({ id: myPlayerId, name: myName, room: newCode }));
         window.location.href = `room.html?id=${newCode}`;
     } catch(e) { showToast("Gagal Membuat Room"); }
@@ -50,8 +47,12 @@ document.getElementById('btn-join-room').addEventListener('click', async () => {
     try {
         const snap = await get(ref(db, `rooms/${code}`));
         if (snap.exists()) {
-            const players = snap.val().players || {};
-            if (Object.keys(players).length >= MAX_PLAYERS) return showToast(`Room Penuh (Maks ${MAX_PLAYERS})`);
+            const data = snap.val();
+            const players = data.players || {};
+            // Ambil batas maksimal dari DB, default ke 8 jika tidak ada
+            const max = data.maxPlayers || 8; 
+            
+            if (Object.keys(players).length >= max && !players[myPlayerId]) return showToast(`Room Penuh (Maks ${max})`);
             
             sessionStorage.setItem('unoFlexSession', JSON.stringify({ id: myPlayerId, name: myName, room: code }));
             window.location.href = `room.html?id=${code}`;
