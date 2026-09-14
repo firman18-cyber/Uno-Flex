@@ -1,8 +1,6 @@
 import { db } from './firebase-config.js';
 import { ref, set, update, onValue, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 
-const MAX_PLAYERS = 8; 
-
 function showToast(msg) {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
@@ -25,7 +23,6 @@ let playersCache = {};
 
 document.getElementById('display-room-code').textContent = currentRoom;
 document.getElementById('display-my-name').textContent = escapeHTML(myName);
-document.getElementById('max-player-display').textContent = MAX_PLAYERS;
 
 const connIndicator = document.getElementById('conn-indicator');
 onValue(ref(db, ".info/connected"), (snap) => {
@@ -65,7 +62,11 @@ onValue(ref(db, `rooms/${currentRoom}`), (snapshot) => {
     if (!snapshot.exists()) { 
         showToast("Room Ditutup"); sessionStorage.removeItem('unoFlexSession'); setTimeout(() => window.location.href = 'index.html', 2000); return; 
     }
-    const data = snapshot.val(); const players = data.players || {};
+    const data = snapshot.val(); 
+    const players = data.players || {};
+    const maxP = data.maxPlayers || 8; // Ambil nilai Max Players dari DB
+    
+    document.getElementById('max-player-display').textContent = maxP;
     
     if (!players[data.hostId] && Object.keys(players).length > 0) {
         const newHostId = Object.keys(players)[0];
@@ -74,10 +75,13 @@ onValue(ref(db, `rooms/${currentRoom}`), (snapshot) => {
 
     playersCache = players;
     
+    // Tampilkan tombol Host (Restart & Edit Max)
     if (isHost) {
         document.getElementById('btn-restart-game').classList.remove('hidden');
+        document.getElementById('btn-edit-max').classList.remove('hidden');
     } else {
         document.getElementById('btn-restart-game').classList.add('hidden');
+        document.getElementById('btn-edit-max').classList.add('hidden');
     }
 
     renderPlayers(players, data.hostId); 
@@ -163,8 +167,21 @@ document.getElementById('btn-restart-game').addEventListener('click', () => {
             updates[`rooms/${currentRoom}/players/${pid}/isActive`] = true;
             updates[`rooms/${currentRoom}/players/${pid}/isWinner`] = false;
         });
-        update(ref(db), updates).then(() => {
-            showToast("Babak Baru Dimulai!");
-        });
+        update(ref(db), updates).then(() => { showToast("Babak Baru Dimulai!"); });
+    }
+});
+
+// LOGIKA EDIT JUMLAH MAKSIMAL PEMAIN OLEH HOST
+document.getElementById('btn-edit-max').addEventListener('click', () => {
+    let currentMax = document.getElementById('max-player-display').textContent;
+    let newVal = prompt("Ubah jumlah maksimal pemain:", currentMax);
+    if(newVal !== null && newVal.trim() !== "") {
+        let parsed = parseInt(newVal);
+        if(!isNaN(parsed) && parsed > 1) {
+            update(ref(db, `rooms/${currentRoom}`), { maxPlayers: parsed });
+            showToast("Batas pemain diperbarui!");
+        } else {
+            showToast("Masukkan angka yang valid!");
+        }
     }
 });
