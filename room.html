@@ -51,7 +51,12 @@
 
         <div class="bottom-bar luckiest">
             <div class="bb-name">👤 <span id="display-my-name">NAMA</span></div>
-            <div>👥 PEMAIN: <span id="player-count-display">1</span> / <span id="max-player-display">8</span></div>
+            <div style="display: flex; align-items: center;">
+                👥 PEMAIN: <span id="player-count-display" style="margin: 0 4px;">1</span> / <span id="max-player-display" style="margin-left: 4px;">8</span>
+                
+                <!-- TOMBOL EDIT LIMIT KHUSUS HOST -->
+                <button id="btn-edit-max" class="btn-edit hidden">✏️</button>
+            </div>
         </div>
     </div>
 
