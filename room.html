@@ -26,20 +26,26 @@
             <div class="rules-title luckiest">ATURAN PERMAINAN</div>
             <div class="rule-item"><span class="icon">✅</span><span><b style="color:var(--uno-green)">AKTIF:</b> Boleh pakai kemampuan Flex</span></div>
             <div class="rule-item"><span class="icon">❌</span><span><b style="color:var(--uno-red)">NONAKTIF:</b> Flex terkunci</span></div>
-            <div class="rule-item" style="border-top: 1px dashed #555; padding-top: 5px; margin-top: 3px;"><span class="icon">🔄</span><span>Sistem reset otomatis jika semua merah</span></div>
+            <div class="rule-item" style="border-top: 1px dashed #555; padding-top: 5px; margin-top: 3px;"><span class="icon">🔄</span><span>Sistem otomatis reset jika semua merah</span></div>
+            
+            <button id="btn-restart-game" class="btn-win luckiest hidden" style="background: var(--uno-blue); color: white; margin-top: 10px; width: 100%; border: 2px solid #000; box-shadow: 0 4px 0 #000;">♻️ MULAI ULANG GAME (HOST)</button>
         </div>
 
         <div class="arena-container">
             <div class="side-col" id="col-left"></div>
+            
             <div class="center-col" id="main-card-area">
                 <div class="card-container" id="my-card-trigger">
                     <div class="power-card" id="my-power-card">
-                        <div class="card-face card-front"><div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div>
-                        <div class="card-face card-back"><div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></div>
+                        <div class="card-face card-front"><div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div>
+                        <div class="card-face card-back"><div class="c-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div></div>
                     </div>
                 </div>
                 <div id="my-card-status" class="card-label luckiest">KARTU AKTIF</div>
+                
+                <button id="btn-win" class="btn-win luckiest">🏆 SAYA MENANG</button>
             </div>
+
             <div class="side-col" id="col-right"></div>
         </div>
 
